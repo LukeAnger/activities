@@ -9,8 +9,12 @@ form {
     transition: 0.25s;
 }
 
-form:hover {
+/* form:hover {
     box-shadow: 4px 4px 5px grey;
+} */
+
+#formActivities label {
+    display: flex;
 }
 /* remove default styling */
 input[type="checkbox"] {
