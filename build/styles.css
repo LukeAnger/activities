@@ -1,0 +1,30 @@
+
+
+
+form {
+    box-shadow: 2px 2px 3px grey;
+    padding: 10px;
+    border-radius: 10px;
+    background: #cedaff;
+    transition: 0.25s;
+}
+
+/* form:hover {
+    box-shadow: 4px 4px 5px grey;
+} */
+
+#formActivities label {
+    display: flex;
+}
+/* remove default styling */
+input[type="checkbox"] {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    margin-right: 5px;
+    position: relative;
+    top: 5px;
+}
