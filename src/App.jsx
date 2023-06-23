@@ -1,17 +1,34 @@
 import React, { useState, useEffect } from 'react';
+import { exampleActivities } from './exampleData.js';
 
 const App = () => {
 
     const [curFile, setCurFile] = useState(null);
     const [files, setFiles] = useState([]);
+    const [activities, setActivities] = useState(exampleActivities);
+
+    const onAddActivity = (e) => {
+        e.preventDefault();
+        setActivities([...activities, {id: activities.length + 1, name: e.nativeEvent.target[0].value, photos: []}]);
+    }
 
     const onFileChange = (e) => {
         setCurFile(e.target.files[0]);
     }
 
-    const onAddFile = (e, file) => {
+    const onAddFile = (e, file, index) => {
         e.preventDefault();
         setFiles([...files, URL.createObjectURL(curFile)]);
+        setActivities(activities.map(activity => {
+            if (activity.id === index) {
+                console.log(curFile);
+                // [...activity.photos, URL.createObjectURL(curFile)];
+                activity.photos.push(URL.createObjectURL(curFile));
+            }
+            return activity;
+        }))
+        
+        
     }
 
     const clickHandler = () => {
@@ -21,50 +38,19 @@ const App = () => {
     return (
         <div>
             <h1>Activities</h1>
-            <form id='formActivities'>
-                <label onClick={clickHandler} >
-                    <input  type="checkbox" name="study" />
-                    Study Languages
-                    <Upload onAddFile={onAddFile} onFileChange={onFileChange} curFile={curFile} files={files} />
-                </label>
-                <br/>
-                <label onClick={clickHandler} >
-                    <input  type="checkbox" name="starwars" />
-                    Watch Star Wars
-                </label>
-                <br/>
-                <label onClick={clickHandler} >
-                    <input  type="checkbox" name="asteroid" />
-                    Movie Asteroid City
-                </label>
-                <br/>
-                <label onClick={clickHandler} >
-                    <input  type="checkbox" name="ford" />
-                    Ford Museum
-                </label>
-                <br/>
-                <label onClick={clickHandler} >
-                    <input  type="checkbox" name="driving" />
-                    Driving Classes
-                </label>
-                <br/>
-                <label onClick={clickHandler} >
-                    <input type="checkbox" name="skating" />
-                    Ice Skating
-                </label>
-                <br/>
-                <label onClick={clickHandler} >
-                    <input  type="checkbox" name="mani" />
-                    Dinner at Mani
-                </label>
-            
-            </form>
+            <AddActivityForm onAddActivity={onAddActivity} />
+            <div id='activities'>
+                {activities && activities.map(activity => {
+                    return <Activity activity={activity} onAddFile={onAddFile} onFileChange={onFileChange} curFile={curFile} files={files} clickHandler={clickHandler} />
+                    })
+                }
+            </div>
         </div>
     )
 }
 
-const Upload = ({ onAddFile, onFileChange, curFile, files}) => {
-    console.log(files)
+const Upload = ({ onAddFile, onFileChange, curFile, activity}) => {
+    const {id, photos} = activity;
     return (
         <div>
             <form>
@@ -73,11 +59,11 @@ const Upload = ({ onAddFile, onFileChange, curFile, files}) => {
                 </label>
                 <br/>
                 <label>
-                    <input onClick={onAddFile}  type="submit" value="Submit" />
+                    <input onClick={e => {onAddFile(e, curFile, id)}}  type="submit" value="Submit" />
                 </label>
             </form>
-            {files.length ? 
-            files.map(file => {
+            {photos.length ? 
+            photos.map(file => {
             return <img 
                 src={file}
                 alt="Uploaded file"
@@ -90,5 +76,38 @@ const Upload = ({ onAddFile, onFileChange, curFile, files}) => {
         </div>
     )
 }
+
+const Activity = ({activity, onAddFile, onFileChange, clickHandler, curFile, files}) => {
+
+    return (
+        <>
+            <label onClick={clickHandler} >
+                <input  type="checkbox" name="study" />
+                {activity.name}
+                <Upload onAddFile={onAddFile} onFileChange={onFileChange} curFile={curFile} files={files} activity={activity} />
+            </label>
+            <br/>
+        </>
+    )
+}
+
+const AddActivityForm = ({ onAddActivity }) => {
+
+
+    return (
+        <div>
+            <form onSubmit={onAddActivity}>
+                <label>
+                    Activity Name:
+                    <input type="text" name="name" />
+                </label>
+                <br/>
+                
+                <input type="submit" value="Submit" />
+            </form>
+        </div>
+    )   
+}
+
 
 export default App;

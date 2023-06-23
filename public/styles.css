@@ -1,7 +1,7 @@
 
 
 
-form {
+#activities {
     box-shadow: 2px 2px 3px grey;
     padding: 10px;
     border-radius: 10px;
@@ -13,7 +13,7 @@ form {
     box-shadow: 4px 4px 5px grey;
 } */
 
-#formActivities label {
+#activities label {
     display: flex;
 }
 /* remove default styling */
